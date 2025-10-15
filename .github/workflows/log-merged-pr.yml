@@ -1,0 +1,29 @@
+name: Update Google Sheet on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  update-sheet:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send merged PR data to Google Sheet
+        env:
+          SOURCE_BRANCH: ${{ github.event.pull_request.head.ref }}
+          TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_USER: ${{ github.event.pull_request.user.login }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          curl -s -X POST "https://script.google.com/macros/s/AKfycbzQ661H7BhXjCXeXGVSEhy9uxHUrprzC2dLCSBnG-ZbZJhD0AvKpPE1zaUTOg323bFOnA/exec" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "source_branch": "'"$SOURCE_BRANCH"'",
+              "target_branch": "'"$TARGET_BRANCH"'",
+              "pr_title": "'"$PR_TITLE"'",
+              "pr_user": "'"$PR_USER"'",
+              "pr_url": "'"$PR_URL"'"
+            }'
