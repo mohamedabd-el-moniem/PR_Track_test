@@ -19,7 +19,7 @@ jobs:
           MERGED_BY: ${{ github.event.pull_request.merged_by.login }}
           PR_URL: ${{ github.event.pull_request.html_url }}
         run: |
-          curl -s -X POST "https://script.google.com/macros/s/AKfycbyjovq-UFHW5LZMm5txHAUbDi2uXLa_AzCgy9lU0sAm3fjqxDD2pktY3RqyqYfuevQt9g/exec" \
+          curl -s -X POST "https://script.google.com/macros/s/AKfycbyn4cnGaI2wrEu4dDeYRtdMZS2bA6zdIvzNvX9SHGzRY7McMBNhGQ3M8W7U8y8gLZnF/exec" \
             -H "Content-Type: application/json" \
             -d '{
               "source_branch": "'"$SOURCE_BRANCH"'",
