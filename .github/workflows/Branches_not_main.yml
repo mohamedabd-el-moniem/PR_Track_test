@@ -1,7 +1,7 @@
 name: Detect Unmerged Branches
 on:
   schedule:
-    - cron: "* * * * *" # runs every minute
+    - cron: "*/5 * * * *"  # Every 5 minutes (more realistic)
   workflow_dispatch:
 
 jobs:
@@ -14,5 +14,12 @@ jobs:
       - name: Show unmerged branches
         run: |
           git fetch origin
-          echo "Branches not yet merged into main:"
-          git branch -r --no-merged origin/main
+          DEFAULT_BRANCH=$(git remote show origin | grep 'HEAD branch' | awk '{print $NF}')
+          echo "Default branch is: $DEFAULT_BRANCH"
+          echo "Branches not yet merged into $DEFAULT_BRANCH:"
+          UNMERGED=$(git branch -r --no-merged origin/$DEFAULT_BRANCH 2>/dev/null || echo "")
+          if [ -z "$UNMERGED" ]; then
+            echo "✅ No unmerged branches found."
+          else
+            echo "$UNMERGED"
+          fi
