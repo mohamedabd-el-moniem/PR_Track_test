@@ -1,0 +1,18 @@
+name: Detect Unmerged Branches
+on:
+  schedule:
+    - cron: "* * * * *" # runs every minute
+  workflow_dispatch:
+
+jobs:
+  check-unmerged:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Show unmerged branches
+        run: |
+          git fetch origin
+          echo "Branches not yet merged into main:"
+          git branch -r --no-merged origin/main
